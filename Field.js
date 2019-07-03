@@ -1,11 +1,10 @@
 export class Field {
 
-    constructor(value, prev){
-        this.value = value;
-        if(prev === undefined){
-            this.prev = null;
-        }else{
-            this.prev = prev;
+    constructor(explored){
+        this.explored = explored;
+        this.prev = null;
+        if(explored === undefined) {
+            this.explored = false;
         }
     }
 
@@ -13,15 +12,15 @@ export class Field {
         return this.prev;
     }
 
-    getField(){
-        return this.value;
+    getExplored(){
+        return this.explored;
     }
 
     setPrev(prev){
         this.prev = prev;
     }
 
-    setField(value){
-        this.value = value;
+    Explore(){
+        this.explored = true;
     }
 }

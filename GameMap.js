@@ -19,12 +19,12 @@ export class GameMap {
         return array;
     }
 
-    getValues(){
+    getAllExplored(){
         let array = [];
         for (let i = 0; i < this.sizeX; ++i) {
             array[i] = [];
             for (let j = 0; j < this.sizeY; ++j) {
-                array[i][j] = this.map[i][j].getField();
+                array[i][j] = this.map[i][j].getExplored();
             }
         }
         return array;
@@ -41,12 +41,12 @@ export class GameMap {
         return array;
     }
 
-    setField(x, y, value){
-        this.map[x][y] = new Field(value);
+    setExplored(x, y){
+        this.map[x][y].Explore();
     }
 
     getFieldValue(x, y){
-        return this.map[x][y].getField();
+        return this.map[x][y].getExplored();
     }
 
     setPrev(x, y, value){

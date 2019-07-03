@@ -26,16 +26,14 @@ function create () {
             array[i][j] = 0;
         }
     }
-    for(let i = 0; i < 17; i ++){
-        for(let j = 5; j < 10; j ++){
-            array[i][j] = -1;
-        }
-    }
+
+    array[0][2] = -1;
+    array[2][0] = -1;
 
     let matrix = findRoute(array, start, end);
     let solutionMatrix = showRoute(matrix.getAllPrevious(), start, end);
 
-    matrix = matrix.getValues();
+    matrix = matrix.getAllExplored();
 
     let graphics = this.add.graphics({ fillStyle: { color: 0x0000ff }, lineStyle: { color: 0x0000aa } });
 
@@ -49,8 +47,8 @@ function create () {
 
         for(let x = 0; x < config.MAP_SIZE_X; x++) {
             for(let y = 0; y < config.MAP_SIZE_Y; y++) {
-                matrix = Phaser.Utils.Array.Matrix.ReverseRows(matrix);
-                text.setText(Phaser.Utils.Array.Matrix.MatrixToString(matrix));
+                //matrix = Phaser.Utils.Array.Matrix.ReverseRows(matrix);
+                //text.setText(Phaser.Utils.Array.Matrix.MatrixToString(matrix));
 
                 solutionMatrix = Phaser.Utils.Array.Matrix.ReverseRows(solutionMatrix);
                 solutionText.setText(Phaser.Utils.Array.Matrix.MatrixToString(solutionMatrix));
@@ -71,32 +69,32 @@ function create () {
 function findRoute(array, start, end){
 
     let tries = 0;
-    let numbers = new GameMap(config.MAP_SIZE_X, config.MAP_SIZE_Y, array);
+    let bfsArr = new GameMap(config.MAP_SIZE_X, config.MAP_SIZE_Y, array);
 
-    numbers.setField(start.getX(), start.getY(), 1);
+    bfsArr.setExplored(start.getX(), start.getY());
 
-    while (numbers.getFieldValue(end.getX(), end.getY()) === 0) {
+    while (! bfsArr.getFieldValue(end.getX(), end.getY())) {
         for (let i = 0; i < config.MAP_SIZE_X; i++) {
             for (let j = 0; j < config.MAP_SIZE_Y; j++) {
-                if(numbers.getFieldValue(i, j) > 0){
-                    let valueOfCurrent = numbers.getFieldValue(i, j);
+                if(bfsArr.getFieldValue(i, j) === true){
+
                     let currentPoint = new Point(i, j);
 
-                    if(i > 0 && numbers.getFieldValue(i - 1, j) === 0){
-                        numbers.setField(i - 1, j, valueOfCurrent + 1);
-                        numbers.setPrev(i - 1, j, currentPoint);
+                    if(i > 0 && ! bfsArr.getFieldValue(i - 1, j)){
+                        bfsArr.setExplored(i - 1, j);
+                        bfsArr.setPrev(i - 1, j, currentPoint);
                     }
-                    else if(i + 1 < config.MAP_SIZE_X && numbers.getFieldValue(i + 1, j) === 0){
-                        numbers.setField(i + 1, j, valueOfCurrent + 1);
-                        numbers.setPrev(i + 1, j, currentPoint);
+                    else if(i + 1 < config.MAP_SIZE_X && ! bfsArr.getFieldValue(i + 1, j)){
+                        bfsArr.setExplored(i + 1, j);
+                        bfsArr.setPrev(i + 1, j, currentPoint);
                     }
-                    else if(j > 0 && numbers.getFieldValue(i, j - 1) === 0){
-                        numbers.setField(i, j - 1, valueOfCurrent + 1);
-                        numbers.setPrev(i, j - 1, currentPoint);
+                    else if(j > 0 && ! bfsArr.getFieldValue(i, j - 1)){
+                        bfsArr.setExplored(i, j - 1);
+                        bfsArr.setPrev(i, j - 1, currentPoint);
                     }
-                    else if(j + 1 < config.MAP_SIZE_Y && numbers.getFieldValue(i, j + 1) === 0){
-                        numbers.setField(i, j + 1, valueOfCurrent + 1);
-                        numbers.setPrev(i, j + 1, currentPoint);
+                    else if(j + 1 < config.MAP_SIZE_Y && ! bfsArr.getFieldValue(i, j + 1)){
+                        bfsArr.setExplored(i, j + 1);
+                        bfsArr.setPrev(i, j + 1, currentPoint);
                     }
                 }
             }
@@ -107,11 +105,11 @@ function findRoute(array, start, end){
         }
     }
 
-    console.log(JSON.stringify(numbers.getAllPrevious()));
-    console.log(JSON.stringify(numbers.getValues()));
+    console.log(JSON.stringify(bfsArr.getAllPrevious()));
+    console.log(JSON.stringify(bfsArr.getAllExplored()));
     console.log("tries: " + tries);
 
-    return numbers;
+    return bfsArr;
 }
 
 //------------------------------------------------------------------------
@@ -147,8 +145,12 @@ function showRoute(prevArr, start, end) {
         if(current.getX() === start.getX() && current.getY() === start.getY()){
             break;
         }
+        console.log(current);
 
         current = prev;
+        if(current === null){
+            break;
+        }
         prev = prevArr[current.getX()][current.getY()];
 
     }
