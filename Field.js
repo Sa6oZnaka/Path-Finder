@@ -1,12 +1,8 @@
 export class Field {
 
-    constructor(value, prev){
+    constructor(value){
         this.value = value;
-        if(prev === undefined){
-            this.prev = null;
-        }else{
-            this.prev = prev;
-        }
+        this.prev = null;
     }
 
     getPrev(){
