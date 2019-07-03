@@ -2,18 +2,18 @@ import {Field} from "./Field.js";
 
 export class GameMap {
 
-    constructor(sizeX, sizeY, initalValue){
+    constructor(sizeX, sizeY, array){
         this.sizeX = sizeX;
         this.sizeY = sizeY;
-        this.map = this.mapInit(sizeX, sizeY,initalValue);
+        this.map = GameMap.mapInit(sizeX, sizeY,array);
     }
 
-    mapInit(n, m, v){
+    static mapInit(n, m, arr){
         let array = [];
         for (let i = 0; i < n; ++i) {
             array[i] = [];
             for (let j = 0; j < m; ++j) {
-                array[i][j] = new Field(v);
+                array[i][j] = new Field(arr[i][j]);
             }
         }
         return array;
