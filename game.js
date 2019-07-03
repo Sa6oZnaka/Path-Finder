@@ -32,8 +32,15 @@ function create () {
         }
     }
 
+    for(let i = 1; i < 10; i++){
+        array[12][i] = - 1;
+    }
+
+
     let matrix = findRoute(array, start, end);
     let solutionMatrix = showRoute(matrix.getAllPrevious(), start, end);
+
+    console.log(getRoute(matrix.getAllPrevious(),start, end));
 
     matrix = matrix.getValues();
 
@@ -157,3 +164,34 @@ function showRoute(prevArr, start, end) {
     return array;
 }
 
+//------------------------------------------------------------------------
+// FUNCTION: getRoute
+// gets the route (in points) using prevArr
+// PARAMETERS:
+// prevArr - using the instance of GameMap call GameMap::getAllPrevious
+// start   - start cordinates - example - ( new Point(x, y) )
+// end     - end   cordinates - example - ( new Point(x, y) )
+//------------------------------------------------------------------------
+
+
+function getRoute(prevArr, start, end) {
+
+    let path = [];
+
+    let current = end,
+        prev = prevArr[current.getX()][current.getY()];
+
+    while(true){
+
+        path.push(current);
+
+        if(current.getX() === start.getX() && current.getY() === start.getY()){
+            break;
+        }
+
+        current = prev;
+        prev = prevArr[current.getX()][current.getY()];
+
+    }
+    return path;
+}
