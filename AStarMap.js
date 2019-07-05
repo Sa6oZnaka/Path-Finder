@@ -1,24 +1,12 @@
 import {Point} from "./Point.js";
 
-export class Map {
+export class AStarMap {
 
     constructor(map) {
-        /*this.map = [
-            [ 3, 3, 7, 7, 3, 3, 6, 3, 3, 7, 3, 6, 3, 7, 3],
-            [ 3, 3, 6, 3, 3, 7, 7, 7, 3, 6, 3, 7, 3, 6, 3],
-            [ 7, 3, 7, 3, 3, 3, 6, 3, 3, 7, 3, 7, 3, 7, 3],
-            [ 3, 3, 7, 3, 7, 3, 7, 3, 3, 7, 3, 3, 3, 7, 3],
-            [ 3, 3, 6, 3, 7, 3, 7, 7, 3, 3, 3, 3, 7, 7, 6],
-            [ 3, 6, 7, 3, 6, 3, 7, 3, 3, 3, 3, 3, 3, 3, 3],
-            [ 3, 3, 6, 3, 7, 3, 6, 3, 7, 7, 3, 7, 3, 7, 3],
-            [ 0, 3, 7, 3, 7, 3, 7, 3, 3, 3, 3, 7, 3, 3, 3]
-        ];*/
         this.map = map;
-        this.data = this.map;
     }
 
     outOfBounds(x, y) {
-        //console.log(this.map[0].length);
         return x < 0 || x >= this.map[0].length ||
             y < 0 || y >= this.map.length;
     }
@@ -31,7 +19,6 @@ export class Map {
         if (this.map[y][x] === 0) {
             return false;
         }
-
         return true;
     }
 
@@ -47,7 +34,6 @@ export class Map {
         return neighbors;
     }
 
-    // Only works when moving to adjacent levels
     getCost(xC, yC, xT, yT) {
         return this.map[yT][xT];
     }

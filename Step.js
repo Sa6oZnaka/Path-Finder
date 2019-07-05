@@ -1,20 +1,20 @@
-export class Step {
+import {Point} from "./Point.js";
 
-    constructor(xC, yC, xT, yT, totalSteps, parentStep){
-        var h = this.distanceM(xC, yC, xT, yT);
+export class Step extends Point {
 
-        this.x = xC;
-        this.y = yC;
+    constructor(xC, yC, xT, yT, totalSteps, parentStep) {
+        super(xC, yC);
+
         this.g = totalSteps;
-        this.h = h;
-        this.f = totalSteps + h;
+        this.h = this.distance(xC, yC, xT, yT);
+        this.f = totalSteps + this.h;
         this.parent = parentStep;
     }
 
-    distanceM (xC, yC, xT, yT) {
-        var dx = Math.abs(xT - xC), dy = Math.abs(yT - yC);
+    distance(xC, yC, xT, yT) {
+        let dx = Math.abs(xT - xC),
+            dy = Math.abs(yT - yC);
         return dx + dy;
     }
-
-
 }
+

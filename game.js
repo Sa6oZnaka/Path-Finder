@@ -1,10 +1,10 @@
 import {config} from "./config.js";
 import {Point} from "./Point.js";
 import {GameMap} from "./GameMap.js";
-import {FindPath2} from "./FindPath2.js";
+import {FindPath} from "./FindPath.js";
 
 let start = new Point(7, 14);
-let end  = new Point(0, 1);
+let end = new Point(0, 1);
 
 let gameConfig = {
     width: 1400,
@@ -17,7 +17,7 @@ let gameConfig = {
 
 let game = new Phaser.Game(gameConfig);
 
-function create () {
+function create() {
 
     // create test array
     let array = [];
@@ -27,19 +27,19 @@ function create () {
             array[i][j] = 0;
         }
     }
-    for(let i = 0; i < 17; i ++){
-        for(let j = 5; j < 10; j ++){
+    for (let i = 0; i < 17; i++) {
+        for (let j = 5; j < 10; j++) {
             array[i][j] = -1;
         }
     }
 
-    for(let i = 1; i < 10; i++){
-        array[12][i] = - 1;
+    for (let i = 1; i < 10; i++) {
+        array[12][i] = -1;
     }
 
 
     console.log("---------------");
-    let test1 = new FindPath2(array);
+    let test1 = new FindPath(array);
     console.log(test1.findPath(start.y, start.x, end.y, end.x));
     console.log("---------------");
 
@@ -47,25 +47,25 @@ function create () {
     let solutionMatrix = showRoute(matrix.getAllPrevious(), start, end);
 
     console.log("===============");
-    console.log(getRoute(matrix.getAllPrevious(), start,end));
+    console.log(getRoute(matrix.getAllPrevious(), start, end));
     console.log("===============");
 
     //console.log(getRoute(matrix.getAllPrevious(),start, end));
 
     matrix = matrix.getValues();
 
-    let graphics = this.add.graphics({ fillStyle: { color: 0x0000ff }, lineStyle: { color: 0x0000aa } });
+    let graphics = this.add.graphics({fillStyle: {color: 0x0000ff}, lineStyle: {color: 0x0000aa}});
 
-    let text = this.add.text(0, 0, '', { font: '15px Courier', fill: '#0f0' });
-    let solutionText = this.add.text(700, 0, 'frefre', { font: '15px Courier', fill: '#ff0' });
+    let text = this.add.text(0, 0, '', {font: '15px Courier', fill: '#0f0'});
+    let solutionText = this.add.text(700, 0, 'frefre', {font: '15px Courier', fill: '#ff0'});
 
     redraw();
 
-    function redraw () {
+    function redraw() {
         graphics.clear();
 
-        for(let x = 0; x < config.MAP_SIZE_X; x++) {
-            for(let y = 0; y < config.MAP_SIZE_Y; y++) {
+        for (let x = 0; x < config.MAP_SIZE_X; x++) {
+            for (let y = 0; y < config.MAP_SIZE_Y; y++) {
                 matrix = Phaser.Utils.Array.Matrix.ReverseRows(matrix);
                 text.setText(Phaser.Utils.Array.Matrix.MatrixToString(matrix));
 
@@ -85,7 +85,7 @@ function create () {
 // end   - end   cordinates - example - ( new Point(x, y) )
 //------------------------------------------------------------------------
 
-function findRoute(array, start, end){
+function findRoute(array, start, end) {
 
     let tries = 0;
     let numbers = new GameMap(config.MAP_SIZE_X, config.MAP_SIZE_Y, array);
@@ -95,31 +95,28 @@ function findRoute(array, start, end){
     while (numbers.getFieldValue(end.getX(), end.getY()) === 0) {
         for (let i = 0; i < config.MAP_SIZE_X; i++) {
             for (let j = 0; j < config.MAP_SIZE_Y; j++) {
-                if(numbers.getFieldValue(i, j) > 0){
+                if (numbers.getFieldValue(i, j) > 0) {
                     let valueOfCurrent = numbers.getFieldValue(i, j);
                     let currentPoint = new Point(i, j);
 
-                    if(i > 0 && numbers.getFieldValue(i - 1, j) === 0){
+                    if (i > 0 && numbers.getFieldValue(i - 1, j) === 0) {
                         numbers.setField(i - 1, j, valueOfCurrent + 1);
                         numbers.setPrev(i - 1, j, currentPoint);
-                    }
-                    else if(i + 1 < config.MAP_SIZE_X && numbers.getFieldValue(i + 1, j) === 0){
+                    } else if (i + 1 < config.MAP_SIZE_X && numbers.getFieldValue(i + 1, j) === 0) {
                         numbers.setField(i + 1, j, valueOfCurrent + 1);
                         numbers.setPrev(i + 1, j, currentPoint);
-                    }
-                    else if(j > 0 && numbers.getFieldValue(i, j - 1) === 0){
+                    } else if (j > 0 && numbers.getFieldValue(i, j - 1) === 0) {
                         numbers.setField(i, j - 1, valueOfCurrent + 1);
                         numbers.setPrev(i, j - 1, currentPoint);
-                    }
-                    else if(j + 1 < config.MAP_SIZE_Y && numbers.getFieldValue(i, j + 1) === 0){
+                    } else if (j + 1 < config.MAP_SIZE_Y && numbers.getFieldValue(i, j + 1) === 0) {
                         numbers.setField(i, j + 1, valueOfCurrent + 1);
                         numbers.setPrev(i, j + 1, currentPoint);
                     }
                 }
             }
         }
-        tries ++;
-        if(tries > config.MAP_SIZE_X * config.MAP_SIZE_Y){
+        tries++;
+        if (tries > config.MAP_SIZE_X * config.MAP_SIZE_Y) {
             throw "No route found!";
         }
     }
@@ -142,7 +139,7 @@ function findRoute(array, start, end){
 
 function showRoute(prevArr, start, end) {
 
-    if(prevArr[end.getX()][end.getY()] === null){
+    if (prevArr[end.getX()][end.getY()] === null) {
         throw "The maze isn't solved!";
     }
 
@@ -157,11 +154,11 @@ function showRoute(prevArr, start, end) {
     let current = end,
         prev = prevArr[current.getX()][current.getY()];
 
-    while(array[start.getX()][start.getY()] === 0){
+    while (array[start.getX()][start.getY()] === 0) {
 
         array[current.getX()][current.getY()] = -1;
 
-        if(current.getX() === start.getX() && current.getY() === start.getY()){
+        if (current.getX() === start.getX() && current.getY() === start.getY()) {
             break;
         }
 
@@ -191,11 +188,11 @@ function getRoute(prevArr, start, end) {
     let current = end,
         prev = prevArr[current.getX()][current.getY()];
 
-    while(true){
+    while (true) {
 
         path.push(current);
 
-        if(current.getX() === start.getX() && current.getY() === start.getY()){
+        if (current.getX() === start.getX() && current.getY() === start.getY()) {
             break;
         }
 

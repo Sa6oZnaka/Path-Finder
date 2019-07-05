@@ -1,11 +1,10 @@
 import {Step} from "./Step.js";
-import {Map} from "./Map.js";
+import {AStarMap} from "./AStarMap.js";
 
+export class FindPath {
 
-export class FindPath2 {
-
-    constructor(map){
-        this.map = new Map(map);
+    constructor(map) {
+        this.map = new AStarMap(map);
 
         this.open = [];
         this.closed = [];
@@ -18,39 +17,29 @@ export class FindPath2 {
 
     // Remove a step that already exists by object memory address (not actual x and y values)
     removeOpen(step) {
-        for (var i = 0; i < this.open.length; i++) {
+        for (let i = 0; i < this.open.length; i++) {
             if (this.open[i] === step) this.open.splice(i, 1);
         }
         return this;
     }
 
-    // Check if the step is already in the open set
     inOpen(step) {
-        for (var i = 0; i < this.open.length; i++) {
-            if (this.open[i].x === step.x && this.open[i].y === step.y)
+        for (let i = 0; i < this.open.length; i++) {
+            if (this.open[i].x === step.x && this.open[i].y === step.y) {
                 return this.open[i];
+            }
         }
-
         return false;
     }
 
-    inOpen3d(step) {
-        for (var i = 0; i < this.open.length; i++) {
-            if (this.open[i].x === step.x && this.open[i].y === step.y && this.open[i].z === step.z)
-                return this.open[i];
-        }
-
-        return false;
-    }
-
-    // Get the lowest costing tile in the open set
     getBestOpen() {
-        var bestI = 0;
-        for (var i = 0; i < this.open.length; i++) {
-            if (this.open[i].f < this.open[bestI].f) bestI = i;
+        let bestId = 0;
+        for (let i = 0; i < this.open.length; i++) {
+            if (this.open[i].f < this.open[bestId].f) {
+                bestId = i;
+            }
         }
-
-        return this.open[bestI];
+        return this.open[bestId];
     }
 
     addClosed(step) {
@@ -58,9 +47,8 @@ export class FindPath2 {
         return this;
     }
 
-    // Check if the step is already in the closed set
     inClosed(step) {
-        for (var i = 0; i < this.closed.length; i++) {
+        for (let i = 0; i < this.closed.length; i++) {
             if (this.closed[i].x === step.x && this.closed[i].y === step.y)
                 return this.closed[i];
         }
@@ -68,25 +56,12 @@ export class FindPath2 {
         return false;
     }
 
-    inClosed3d(step) {
-        for (var i = 0; i < this.closed.length; i++) {
-            if (this.closed[i].x === step.x &&
-                this.closed[i].y === step.y &&
-                this.closed[i].z === step.z)
-                return this.closed[i];
-        }
+    findPath(xC, yC, xT, yT) {
+        let current,
+            neighbors,
+            neighborRecord,
+            stepCost;
 
-        return false;
-    }
-
-    findPath(xC, yC, xT, yT, maxSteps) {
-        var current, // Current best open tile
-            neighbors, // Dump of all nearby neighbor tiles
-            neighborRecord, // Any pre-existing records of a neighbor
-            stepCost, // Dump of a total step score for a neighbor
-            i;
-
-        // You must add the starting step
         this.reset()
             .addOpen(new Step(xC, yC, xT, yT, this.step, false));
 
@@ -104,7 +79,7 @@ export class FindPath2 {
 
             // Get neighbors from the map and check them
             neighbors = this.map.getNeighbors(current.x, current.y);
-            for (i = 0; i < neighbors.length; i++) {
+            for (let i = 0; i < neighbors.length; i++) {
                 // Get current step and distance from current to neighbor
                 stepCost = current.g + this.map.getCost(current.x, current.y, neighbors[i].x, neighbors[i].y);
 
@@ -131,15 +106,14 @@ export class FindPath2 {
         return false;
     }
 
-    // Recursive path buliding method
+    // path buliding method
     buildPath(tile, stack) {
         stack.push(tile);
 
         if (tile.parent) {
             return this.buildPath(tile.parent, stack);
-        } else {
-            return stack;
         }
+        return stack;
     }
 
     reset() {
