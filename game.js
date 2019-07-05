@@ -1,6 +1,7 @@
 import {config} from "./config.js";
 import {Point} from "./Point.js";
 import {GameMap} from "./GameMap.js";
+import {FindPath2} from "./FindPath2.js";
 
 let start = new Point(7, 14);
 let end  = new Point(0, 1);
@@ -37,10 +38,19 @@ function create () {
     }
 
 
+    console.log("---------------");
+    let test1 = new FindPath2(array);
+    console.log(test1.findPath(start.y, start.x, end.y, end.x));
+    console.log("---------------");
+
     let matrix = findRoute(array, start, end);
     let solutionMatrix = showRoute(matrix.getAllPrevious(), start, end);
 
-    console.log(getRoute(matrix.getAllPrevious(),start, end));
+    console.log("===============");
+    console.log(getRoute(matrix.getAllPrevious(), start,end));
+    console.log("===============");
+
+    //console.log(getRoute(matrix.getAllPrevious(),start, end));
 
     matrix = matrix.getValues();
 
@@ -114,9 +124,9 @@ function findRoute(array, start, end){
         }
     }
 
-    console.log(JSON.stringify(numbers.getAllPrevious()));
-    console.log(JSON.stringify(numbers.getValues()));
-    console.log("tries: " + tries);
+    //console.log(JSON.stringify(numbers.getAllPrevious()));
+    //console.log(JSON.stringify(numbers.getValues()));
+    //console.log("tries: " + tries);
 
     return numbers;
 }
@@ -160,7 +170,7 @@ function showRoute(prevArr, start, end) {
 
     }
 
-    console.log(array);
+    //console.log(array);
     return array;
 }
 
